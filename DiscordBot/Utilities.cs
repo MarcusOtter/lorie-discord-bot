@@ -12,6 +12,8 @@ namespace DiscordBot
     {
         private static Dictionary<string, string> alerts;
 
+        
+
         static Utilities()
         {
             //Reads .json file and converts into Dictionary<string, string> = "alerts"
@@ -42,6 +44,36 @@ namespace DiscordBot
         public static string GetFormattedAlert(string key, object parameter)
         {
             return GetFormattedAlert(key, new object[] { parameter });
+        }
+
+        public static string UppercaseFirstLetter(string message)
+        {
+            return char.ToUpper(message[0]) + message.Substring(1);
+        }
+
+        //Is this string a url?
+        public static bool ValidateURL(string url)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            return result;
+        }
+
+        //validate that file exists. Could move this into Utilities.
+        public static bool ValidateStorageFile(string path)
+        {
+            //If file doesn't exist
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "");
+                DataStorage.SaveData();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
     }
 }

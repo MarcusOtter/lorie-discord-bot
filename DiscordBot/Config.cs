@@ -17,6 +17,7 @@ namespace DiscordBot
 
         static Config()
         {
+
             if (!Directory.Exists(configFolder))
                 Directory.CreateDirectory(configFolder);
 
