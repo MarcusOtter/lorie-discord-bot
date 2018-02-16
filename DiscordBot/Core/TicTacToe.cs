@@ -57,7 +57,7 @@ namespace DiscordBot.Core
 
         
         //Main function
-        internal static string TicTacToeMove(string playerMarker, string playerName, int x, int y)
+        public static string TicTacToeMove(string playerMarker, string playerName, int x, int y)
         {
             if (boardTiles.Count == 0)
             {
@@ -141,7 +141,7 @@ namespace DiscordBot.Core
             return null;
         }
 
-        internal static void ResetGame()
+        public static void ResetGame()
         {
             players.Clear();
             boardTiles.Clear();
