@@ -22,19 +22,32 @@ namespace DiscordBot.Modules
             //set active game bool in global and store users probably. Then check in commandhandler if these people are in tictactoe game, then write without prefix.
         }
 
-        [Command("testemoji")]
-        [Alias("tictactoe", "tictac", "tic")]
-        [Priority(1)]
-        public async Task testemoji([Remainder] string message)
+        [Command("ttt setmarker")]
+        [Priority(2)]
+        public async Task TicTacToeSetMarker([Remainder] string message)
         {
+            string marker = message.ToLower().Replace(" ", "");
 
-            //Console.WriteLine(message);
-            //await Context.Channel.SendMessageAsync(message);
+            Console.WriteLine(marker);
 
-            //string[] output = TicTacToe.SetMarker(Context.User, emote.ToString());
+            if (!TicTacToe.allowedEmojis.Contains(marker))
+            {
+                await SendEmbeddedMessage("Setting marker failed!", "Please enter a valid marker.");
+                return;
+            }
 
-            //await SendEmbeddedMessage(output[0], output[1]);
+            string[] output = SetMarker(Context.User, marker);
+
+            await SendEmbeddedMessage(output[0], output[1]);
         }
+
+        public string[] SetMarker(SocketUser user, string marker)
+        {
+            var account = UserAccounts.GetAccount(user);
+            account.TTTMarker = marker;
+            return new string[] { "Marker updated!", $"Marker for {user.Username} was updated to {marker}" };
+        }
+
 
         [Command("ttt")]
         [Alias("tictactoe", "tictac", "tic")]
@@ -43,14 +56,20 @@ namespace DiscordBot.Modules
         {
             string tttCommand = message.ToLower();
 
-            if (tttCommand.Contains("setmarker"))
-            {
-                string marker = tttCommand.Substring(9).Replace(" ", "");
+            //if (tttCommand.Contains("setmarker"))
+            //{
+            //    string marker = tttCommand.Substring(9).Replace(" ", "");
 
-                string[] output = TicTacToe.SetMarker(Context.User, marker);
+            //    if (!TicTacToe.allowedEmojis.Contains(marker))
+            //    {
+            //        await SendEmbeddedMessage("Setting marker failed!", "Please enter a valid marker.");
+            //        return;
+            //    }
 
-                await SendEmbeddedMessage(output[0], output[1]);
-            }
+            //    string[] output = TicTacToe.SetMarker(Context.User, marker);
+
+            //    await SendEmbeddedMessage(output[0], output[1]);
+            //}
 
             if (tttCommand.Contains("currentmarker"))
             {

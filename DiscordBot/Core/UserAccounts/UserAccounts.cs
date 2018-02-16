@@ -35,6 +35,11 @@ namespace DiscordBot.Core.UserAccounts
             return GetOrCreateAccount(user.Id);
         }
 
+        public static UserAccount GetAccount(ulong id)
+        {
+            return GetOrCreateAccount(id);
+        }
+
         private static UserAccount GetOrCreateAccount(ulong id)
         {
             var result = from a in userAccounts

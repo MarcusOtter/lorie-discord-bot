@@ -14,6 +14,24 @@ namespace DiscordBot.Core
         internal static List<Player> players = new List<Player>();
         internal static bool isFirstPlayersTurn = true;
 
+        internal static List<string> allowedEmojis = new List<string>
+        {
+            "😀",
+            ":grinning:",
+            "😬",
+            ":grimacing:",
+            "😁",
+            ":grin:",
+            ":joy:",
+            ":smiley:",
+            "😄",
+            ":smile:",
+            ":sweat_smile:",
+            ":laughing:",
+            ":innocent:",
+            ":wink:"
+        };
+
         private static string templateBoard = string.Concat
         (
             "|:black_medium_square:|:zero:|:one:|:two:|\n",
@@ -24,6 +42,10 @@ namespace DiscordBot.Core
 
         public static string DrawBoard()
         {
+            if(boardTiles.Count == 0)
+            {
+                InitializeBoard();
+            }
 
             return string.Format
             (
@@ -33,21 +55,9 @@ namespace DiscordBot.Core
                 boardTiles[6].GetEmoteMarker(), boardTiles[7].GetEmoteMarker(), boardTiles[8].GetEmoteMarker(), boardTiles[0].GetEmoteMarker());
         }
 
-        public static string[] SetMarker(SocketUser user, string marker)
-        {
-            //if (marker.Length > 1)
-            //{
-            //    //await SendEmbeddedMessage("Error", "Please do not enter more than 1 character.");
-            //    return new string[] {"Error", "**Please do not enter more than 1 character.**\n\nA list of emojis can be found here: https://apps.timwhitlock.info/emoji/tables/unicode#block-2-dingbats. \nAll emojis under \"2. Dingbats\" and the first half of the emojis under \n\"5. Uncategorized\" work." };
-            //}
-
-            var account = UserAccounts.UserAccounts.GetAccount(user);
-            account.TTTMarker = marker;
-            return new string[] { "Marker updated!", $"Marker for {user.Username} was updated to {marker}" };
-        }
-
+        
         //Main function
-        internal static string TicTacToeMove(SocketUser player, int x, int y)
+        internal static string TicTacToeMove(string playerMarker, string playerName, int x, int y)
         {
             if (boardTiles.Count == 0)
             {
@@ -58,30 +68,30 @@ namespace DiscordBot.Core
             if (players.Count == 0)
             {
                 //Create player 1 and assign given player name.
-                Player p1 = new Player(1, player);
+                Player p1 = new Player(1, playerMarker, playerName);
                 players.Add(p1);
             }
             else if (players.Count == 1)
             {
                 //Create player 2 and assign given player name.
-                Player p2 = new Player(2, player);
+                Player p2 = new Player(2, playerMarker, playerName);
                 players.Add(p2);
             }
 
             //If player doesn't exist by now, return.
-            if (!PlayerAlreadyExists(player.Username))
+            if (!PlayerAlreadyExists(playerName))
             {
                 return "ERR01:UnknownPlayer";
             }
 
             //If player 1 tries to play and it isn't player 1's turn
-            if (GetPlayer(player.Username).Number == 1 && !isFirstPlayersTurn)
+            if (GetPlayer(playerName).Number == 1 && !isFirstPlayersTurn)
             {
                 return "INVALID_MOVE";
             }
 
             //If player 2 tries to play and it isn't player 2's turn
-            if (GetPlayer(player.Username).Number == 2 && isFirstPlayersTurn)
+            if (GetPlayer(playerName).Number == 2 && isFirstPlayersTurn)
             {
                 return "INVALID_MOVE";
             }
@@ -105,7 +115,7 @@ namespace DiscordBot.Core
             }
 
             //Mark the tile
-            MarkTile(x, y, player.Username);
+            MarkTile(x, y, playerName);
 
             //Flip the turns
             isFirstPlayersTurn = !isFirstPlayersTurn;
@@ -282,18 +292,18 @@ namespace DiscordBot.Core
         {
             private int number;
             private string name;
-            private SocketUser socketUsr;
+            private string marker;
 
-            internal Player(int playerNumber, SocketUser player)
+            internal Player(int playerNumber, string playerMarker, string playerName)
             {
                 number = playerNumber;
-                name = player.Username;
-                socketUsr = player;
+                marker = playerMarker;
+                name = playerName;
             }
 
-            internal SocketUser SocketUsr
+            internal string Marker
             {
-                get { return socketUsr; }
+                get { return marker; }
             }
 
             internal int Number
@@ -371,11 +381,11 @@ namespace DiscordBot.Core
                 }
                 else if (MarkedByPlayer == 1)
                 {
-                    return UserAccounts.UserAccounts.GetAccount(players[0].SocketUsr).TTTMarker;
+                    return players[0].Marker;
                 }
                 else if (MarkedByPlayer == 2)
                 {
-                    return UserAccounts.UserAccounts.GetAccount(players[1].SocketUsr).TTTMarker;
+                    return players[1].Marker;
                 }
                 return "InvalidMarker!";
             }
