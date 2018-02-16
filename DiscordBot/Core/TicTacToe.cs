@@ -87,8 +87,6 @@ namespace DiscordBot.Core
             "<:BibleThump:369773282368552962>",
             "<:Benjasas:370506920118976512>",
             "<a:RareParrot:394551061144403968>"
-
-
         };
 
         private static string templateBoard = string.Concat
@@ -184,7 +182,7 @@ namespace DiscordBot.Core
             {
                 case -1:
                     ResetGame();
-                    return "Game tied.";
+                    return "GAME_TIED";
 
                 case 0:
                     return "ACK";
@@ -224,7 +222,7 @@ namespace DiscordBot.Core
                 return 2;
             }
 
-            if (CheckTie())
+            if (GameIsTied())
             {
                 return -1;
             }
@@ -232,11 +230,11 @@ namespace DiscordBot.Core
         }
 
         //Is the game tied?
-        internal static bool CheckTie()
+        internal static bool GameIsTied()
         {
             for (int i = 0; i < boardTiles.Count; i++)
             {
-                if (boardTiles[i].MarkedByPlayer != 0)
+                if (boardTiles[i].MarkedByPlayer == 0)
                 {
                     return false;
                 }
