@@ -56,11 +56,11 @@ namespace DiscordBot.Modules
                                 "!cheeky  **|**  *;)*\n" +
                                 "!rareParrot  **|**  *Sends a very rare parrot*\n" +
                                 "!playing  **|**  *Sets the game that Lorie is playing.*\n" +
-                                "!cute_count  **|**  *Shows the amount of animals in the list.*\n" +
-                                "!cute_add  **|**  *Adds a cute animal to the list :)*\n" +
-                                "!cute_nr  **|**  *Displays a specific number from the list of cute animals.*\n" +
-                                "!cute_r  **|**  *Displays a random cute animal.*\n" +
-                                "!cute_remove  **|**  *Removes a cute animal from the list :(*\n"
+                                "!cute count  **|**  *Shows the amount of animals in the list.*\n" +
+                                "!cute add  **|**  *Adds a cute animal to the list :)*\n" +
+                                "!cute nr  **|**  *Displays a specific number from the list of cute animals.*\n" +
+                                "!cute r  **|**  *Displays a random cute animal.*\n" +
+                                "!cute remove  **|**  *Removes a cute animal from the list :(*\n"
                                 ;
 
             await SendEmbeddedMessage(title, description);

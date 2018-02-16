@@ -26,7 +26,7 @@ namespace DiscordBot.Modules
         [Priority(2)]
         public async Task TicTacToeSetMarker([Remainder] string message)
         {
-            string marker = message.ToLower().Replace(" ", "");
+            string marker = message.Replace(" ", "");
 
             Console.WriteLine(marker);
 
