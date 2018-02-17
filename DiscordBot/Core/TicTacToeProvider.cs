@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
 
 namespace DiscordBot.Core
 {
@@ -27,15 +28,15 @@ namespace DiscordBot.Core
 
 
         //The 2 active players
-        public static SocketGuildUser player1 = null;
-        public static SocketGuildUser player2 = null;
+        public static IGuildUser player1 = null;
+        public static IGuildUser player2 = null;
 
         public static bool isFirstPlayersTurn;
 
 
-        public static bool UserIsInGame(SocketGuildUser player)
+        public static bool UserIsInGame(IGuildUser player)
         {
-            return player1 == player || player2 == player;
+            return player != null && (player1 == player || player2 == player);
         }
 
         public static bool GameIsInProgress()
@@ -43,18 +44,14 @@ namespace DiscordBot.Core
             return player1 != null && player2 != null;
         }
 
-        public static bool PlayerMarkerIsEmpty(SocketGuildUser player)
+        public static bool PlayerMarkerIsEmpty(IGuildUser player)
         {
-            var userAccount = UserAccounts.UserAccounts.GetAccount(player);
+            var userAccount = UserAccounts.UserAccounts.GetAccount(player.Id);
 
-            if (string.IsNullOrWhiteSpace(userAccount.TTTMarker) || userAccount == null)
-            {
-                return true;
-            }
-            return false;
+            return userAccount == null || string.IsNullOrWhiteSpace(userAccount.TTTMarker);
         }
 
-        public static string AttemptPlayerJoin(SocketGuildUser player)
+        public static string AttemptPlayerJoin(IGuildUser player)
         {
             if (GameIsInProgress())
             {
@@ -96,7 +93,7 @@ namespace DiscordBot.Core
                 );
         }
 
-        public static string StopPlaying(SocketGuildUser user)
+        public static string StopPlaying(IGuildUser user)
         {
             if (!GameIsInProgress())
             {
@@ -114,8 +111,15 @@ namespace DiscordBot.Core
             return sucGameStopped;
         }
 
+        public static void ForceGameRestart()
+        {
+            player1 = null;
+            player2 = null;
+            TicTacToe.ResetGame();
+        }
+
         //This need a better translation layer I think that kinda check everything but I'm too tired atm
-        public static string PlaceMarker(SocketGuildUser player, int x, int y)
+        public static string PlaceMarker(IGuildUser player, int x, int y)
         {
             if (!UserIsInGame(player))
             {
@@ -135,7 +139,7 @@ namespace DiscordBot.Core
             }
 
             //By now I know that this is not ever null thanks to PlayerMarkerIsEmpty
-            var userAccount = UserAccounts.UserAccounts.GetAccount(player);
+            var userAccount = UserAccounts.UserAccounts.GetAccount((SocketGuildUser)player);
 
             //Probably need more checks but yolo
             return TicTacToe.TicTacToeMove(userAccount.TTTMarker, player.Username, x, y);
