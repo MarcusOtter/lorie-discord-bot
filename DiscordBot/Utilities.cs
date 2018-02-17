@@ -12,8 +12,6 @@ namespace DiscordBot
     {
         private static Dictionary<string, string> alerts;
 
-        
-
         static Utilities()
         {
             //Reads .json file and converts into Dictionary<string, string> = "alerts"

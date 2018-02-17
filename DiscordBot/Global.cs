@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DiscordBot
 {
-    internal static class Global
+    public static class Global
     {
-        internal static DiscordSocketClient Client { get; set; }
+        public static DiscordSocketClient Client { get; set; }
     }
 }

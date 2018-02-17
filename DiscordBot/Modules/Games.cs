@@ -13,22 +13,58 @@ namespace DiscordBot.Modules
 {
     public class Games : ModuleBase<SocketCommandContext>
     {
-        [Command("ttt start")]
-        [Alias("tictactoe start", "tictac start", "tic start")]
-        [Priority(2)]
+        [Command("ttt clearall")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task ClearAll()
+        {
+            //This should be a function in TicTacToeProvider.
+            TicTacToeProvider.player1 = null;
+            TicTacToeProvider.player2 = null;
+            TicTacToe.ResetGame();
+            await SendEmbeddedMessage("Games cleared", "An admin has cleared all of the tic tac toe games.");
+        }
+
+        [Command("ttt join")]
         public async Task TicTacToeStart()
         {
-            await SendEmbeddedMessage("Tic Tac Toe board for USER_1 and USER_2", TicTacToe.DrawBoard());
-            //set active game bool in global and store users probably. Then check in commandhandler if these people are in tictactoe game, then write without prefix.
+            string resultString = TicTacToeProvider.AttemptPlayerJoin((SocketGuildUser)Context.User);
+            string title = "Error";
+            string description = "Something is wrong in the code..";
+
+            if (resultString == TicTacToeProvider.sucPlayer2Joined)
+            {
+                title = "Success!";
+                description = $"{Context.User.Mention} is now player 2!";
+                await SendEmbeddedMessage(title, description);
+                await SendEmbeddedMessage("", TicTacToeProvider.StartGame());
+                return;
+            }
+
+            if (resultString == TicTacToeProvider.errGameInProgress)
+            {
+                title = "Failed to join game";
+                description = "Please wait for the current game to finish before starting a new one.";
+            }
+
+            if (resultString == TicTacToeProvider.errUserAlreadyPlaying)
+            {
+                title = "Failed to join game";
+                description = "You've already joined the game. The game will start when another player joins.";
+            }
+
+            if (resultString == TicTacToeProvider.sucPlayer1Joined)
+            {
+                title = "Success!";
+                description = $"{Context.User.Mention} is now player 1!";
+            }
+
+            await SendEmbeddedMessage(title, description);
         }
 
         [Command("ttt setmarker")]
-        [Priority(2)]
         public async Task TicTacToeSetMarker([Remainder] string message)
         {
             string marker = message.Replace(" ", "");
-
-            Console.WriteLine(marker);
 
             if (!TicTacToe.allowedEmojis.Contains(marker))
             {
@@ -48,41 +84,17 @@ namespace DiscordBot.Modules
             return new string[] { "Marker updated!", $"Marker for {user.Username} was updated to {marker}" };
         }
 
-
-        [Command("ttt")]
-        [Alias("tictactoe", "tictac", "tic")]
-        [Priority(1)]
-        public async Task TicTacToeCommands([Remainder] string message)
+        [Command("ttt currentmarker")]
+        public async Task TicTacToeGetCurrentmarker()
         {
-            string tttCommand = message.ToLower();
-
-            //if (tttCommand.Contains("setmarker"))
-            //{
-            //    string marker = tttCommand.Substring(9).Replace(" ", "");
-
-            //    if (!TicTacToe.allowedEmojis.Contains(marker))
-            //    {
-            //        await SendEmbeddedMessage("Setting marker failed!", "Please enter a valid marker.");
-            //        return;
-            //    }
-
-            //    string[] output = TicTacToe.SetMarker(Context.User, marker);
-
-            //    await SendEmbeddedMessage(output[0], output[1]);
-            //}
-
-            if (tttCommand.Contains("currentmarker"))
-            {
-                var account = UserAccounts.GetAccount(Context.User);
-                await SendEmbeddedMessage($"Marker for {Context.User.Username} is {account.TTTMarker}", "");
-
-            }
+            var account = UserAccounts.GetAccount(Context.User);
+            await SendEmbeddedMessage($"The current marker for {Context.User.Username} is {account.TTTMarker}", "");
         }
 
         [Command("ttt")]
-        [Alias("tictactoe", "tictac", "tic")]
         public async Task TicTacToeHelp()
         {
+                                          //_____________OUTDATED_____________//
             string description = string.Concat("```\n",
                                                 "!ttt <@UserToChallenge#1234>\n\n",
                                                 "Challenges a user to a game of Tic Tac Toe.\n",

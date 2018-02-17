@@ -21,8 +21,6 @@ namespace DiscordBot
         //Starts everything
         public async Task StartAsync()
         {
-            
-
             //Return if bot token is blank or null
             if (Config.bot.token == "" || Config.bot.token == null) return;
 

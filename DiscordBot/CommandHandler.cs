@@ -40,17 +40,6 @@ namespace DiscordBot
             var context = new SocketCommandContext(_client, msg);
 
             
-            //.json file with keywords that return a function, so the dictionary would be <string, string> (function, keyword) (cute_R, depressed)
-            //If message contains keywords (Sad, :(, Depressed, depression)
-            //Send cute animal
-
-            //this is totally broken. Make sure "sad" is a separate word, if it is in a word, it's still called right now.
-            string keyword = "sad";
-            if (msg.ToString().ToLower().IndexOf(keyword.ToLower()) != -1)
-            {
-                Console.WriteLine("message contained 'sad'");
-                //await Misc.CuteRandom
-            }
 
             int argPos = 0;
             //If the message is prefixed with the prefix in BotConfig or if the bot is mentioned
