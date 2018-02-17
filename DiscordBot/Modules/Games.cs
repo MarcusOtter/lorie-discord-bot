@@ -79,15 +79,16 @@ namespace DiscordBot.Modules
 
         public string[] SetMarker(SocketUser user, string marker)
         {
-            var account = UserAccounts.GetAccount(user);
+            var account = UserAccounts.GetAccount(user.Id);
             account.TTTMarker = marker;
+            UserAccounts.SaveAccounts();
             return new string[] { "Marker updated!", $"Marker for {user.Username} was updated to {marker}" };
         }
 
         [Command("ttt currentmarker")]
         public async Task TicTacToeGetCurrentmarker()
         {
-            var account = UserAccounts.GetAccount(Context.User);
+            var account = UserAccounts.GetAccount(Context.User.Id);
             await SendEmbeddedMessage($"The current marker for {Context.User.Username} is {account.TTTMarker}", "");
         }
 
@@ -95,10 +96,8 @@ namespace DiscordBot.Modules
         public async Task TicTacToeHelp()
         {
                                           //_____________OUTDATED_____________//
-            string description = string.Concat("```\n",
-                                                "!ttt <@UserToChallenge#1234>\n\n",
-                                                "Challenges a user to a game of Tic Tac Toe.\n",
-                                                "```\n",
+            string description = string.Concat("```!ttt join\n\n",
+                                               "Makes you join the queue.```\n",
                                                 "```\n",
                                                 "!ttt SetMarker <character>\n\n",
                                                 "Sets your individual tic tac toe marker.\n",

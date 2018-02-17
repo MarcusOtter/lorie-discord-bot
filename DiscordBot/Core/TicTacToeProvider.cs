@@ -73,7 +73,6 @@ namespace DiscordBot.Core
             {
                 player2 = player;
 
-                //StartGame method that draws board and mentions player 1 perhaps.
                 return sucPlayer2Joined;
                 
             }
@@ -139,12 +138,10 @@ namespace DiscordBot.Core
             }
 
             //By now I know that this is not ever null thanks to PlayerMarkerIsEmpty
-            var userAccount = UserAccounts.UserAccounts.GetAccount((SocketGuildUser)player);
+            var userAccount = UserAccounts.UserAccounts.GetAccount(player.Id);
 
             //Probably need more checks but yolo
             return TicTacToe.TicTacToeMove(userAccount.TTTMarker, player.Username, x, y);
-
-            //return tic tac thing at the very end
         }
     }
 }

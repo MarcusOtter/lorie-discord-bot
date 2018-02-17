@@ -27,14 +27,16 @@ namespace DiscordBot.Core.UserAccounts
 
         public static void SaveAccounts()
         {
+            Console.WriteLine("Saved accounts.");
             DataStorage.SaveUserAccounts(userAccounts, accountsFile);
         }
 
+        /*
         public static UserAccount GetAccount(SocketUser user)
         {
             return GetOrCreateAccount(user.Id);
         }
-
+        */
         public static UserAccount GetAccount(ulong id)
         {
             return GetOrCreateAccount(id);
