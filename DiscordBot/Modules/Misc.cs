@@ -20,15 +20,15 @@ namespace DiscordBot.Modules
             await Context.Channel.SendMessageAsync("<a:RareParrot:394551061144403968>");
         }
         
-         [Command("cs")]
-         public async Task CSharpChallenge([Remainder]string str)
-         {
-             //await SendEmbeddedMessage("new color", Math.GetRGBFromHEX(str).Red.ToString());
+         //[Command("cs")]
+         //public async Task CSharpChallenge([Remainder]string str)
+         //{
+         //    //await SendEmbeddedMessage("new color", Math.GetRGBFromHEX(str).Red.ToString());
 
-             //await SendEmbeddedMessage(Calculate(first, operatorSign, second).ToString(), "");
+         //    //await SendEmbeddedMessage(Calculate(first, operatorSign, second).ToString(), "");
 
-             //string outputString = Calculate().ToString();
-         }
+         //    //string outputString = Calculate().ToString();
+         //}
         
         [Command("lit")]
         public async Task Lit()
