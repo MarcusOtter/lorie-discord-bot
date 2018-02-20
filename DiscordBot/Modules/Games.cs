@@ -81,7 +81,6 @@ namespace DiscordBot.Modules
         {
             var account = UserAccounts.GetAccount(user.Id);
             account.TTTMarker = marker;
-            UserAccounts.SaveAccounts();
             return new string[] { "Marker updated!", $"Marker for {user.Username} was updated to {marker}" };
         }
 
@@ -105,7 +104,7 @@ namespace DiscordBot.Modules
 
             await SendEmbeddedMessage("==== Tic Tac Toe commands ==== Exclude <> ====", description);
         }
-
+        
         private async Task DeleteMessage(IUserMessage msgToDelete)
         {
             var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);

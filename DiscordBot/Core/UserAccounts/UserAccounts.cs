@@ -27,6 +27,7 @@ namespace DiscordBot.Core.UserAccounts
 
         public static void SaveAccounts()
         {
+            if (userAccounts == null) return;
             Console.WriteLine("Saved accounts.");
             DataStorage.SaveUserAccounts(userAccounts, accountsFile);
         }
@@ -44,11 +45,7 @@ namespace DiscordBot.Core.UserAccounts
 
         private static UserAccount GetOrCreateAccount(ulong id)
         {
-            var result = from a in userAccounts
-                         where a.ID == id
-                         select a;
-
-            var account = result.FirstOrDefault();
+            var account = userAccounts.FirstOrDefault(a => a.ID == id);
 
             if (account == null)
             {
@@ -56,7 +53,6 @@ namespace DiscordBot.Core.UserAccounts
             }
 
             return account;
-
         }
 
         private static UserAccount CreateUserAccount(ulong id)

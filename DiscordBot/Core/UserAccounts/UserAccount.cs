@@ -26,7 +26,7 @@ namespace DiscordBot.Core.UserAccounts
             set
             {
                 money = value;
-                //UserAccounts.SaveAccounts();
+                UserAccounts.SaveAccounts();
             }
         }
 
@@ -39,7 +39,7 @@ namespace DiscordBot.Core.UserAccounts
             set
             {
                 _TTTMarker = value;
-                //UserAccounts.SaveAccounts();
+                UserAccounts.SaveAccounts();
             }
         }
     }
